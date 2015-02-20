@@ -1,0 +1,28 @@
+h1 {
+  font-size: 1.5em;
+  margin: 0;
+  padding: 0.6em;
+}
+a:link {
+  color: #BBBBBB;
+  text-decoration: none;
+  border-bottom: 1px dotted #FFFFFF;
+}
+a:visited {
+  color: #888888;
+  text-decoration: none;
+  border-bottom: 1px dotted #FFFFFF;
+}
+a:hover {
+  color: #FFFFFF;
+  text-decoration: none;
+  border-bottom: 1px dotted #FFFFFF;
+}
+.description {
+  text-align: center;
+  font-size: 0.8em;
+  color: #FFFFFF;
+  margin: 3%;
+  width: 94%;
+  height: 94%;
+}
