@@ -7,7 +7,7 @@
   height: 94%;
 }
 
-.description h1 {
+.description #title {
   font-size: 1.5em;
   margin: 0;
   padding: 0.6em 0;
@@ -41,3 +41,42 @@
   padding: 0;
 }
 
+.modal #info {
+  text-align: center;
+}
+
+.modal #trailer {
+  width: 100%;
+  height: 100%;
+}
+
+.arcontainer {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+
+.ar43dummy {
+  padding-top: 75%;
+}
+.ar169dummy {
+  padding-top: 56%;
+}
+
+.ar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.modal #trailercontainer {
+  margin-bottom: 1em;
+}
+
+.modal #trailer iframe {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}

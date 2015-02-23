@@ -141,10 +141,12 @@ class TilingTemplate(object):
         
 def make_description(title, **kwargs):
     html = '''<div class="description">\n'''.format(title)
-    html += "<h1>{}</h1>\n".format(title)
+    html += '''<h1 id="title">{}</h1>\n'''.format(title)
     if len(kwargs.items()) > 0:
         html += '''<dl>\n'''
         for k, v in kwargs.items():
+            if not k in ["Year", "Genre", "Director"]:
+                continue
             if isinstance(v, list):
                 v = ", ".join(v)
             html += '''<dt>{}</dt><dd>{}</dd>\n'''.format(k, v)

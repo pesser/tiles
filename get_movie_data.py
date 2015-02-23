@@ -1,5 +1,6 @@
 import json
 from movie_api import OMDBClient
+from trailer_api import YouTubeClient
 
 def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
     try:
@@ -37,14 +38,20 @@ def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
     # movies not yet cached
     movies_to_get = normalized_movie_names - cached_movie_names
     client = OMDBClient()
+    youtube_client = YouTubeClient()
     print("Obtaining informations...")
     for movie in movies_to_get:
-        print(movie)
-        info = client.query(movie, False)
+        title = [movie_name for movie_name in movie_names if
+                movie_name.lower() == movie][0]
+        print(title)
+        info = client.query(title, False)
         if "Error" in info:
-            print("Could not retrieve information for '{}'.".format(movie) +
+            print("Could not retrieve information for '{}'.".format(title) +
                     " Skipping.")
         else:
+            youtube_link = ("www.youtube.com" +
+                    youtube_client.query(info["Title"])[0])
+            info["YoutubeTrailer"] = youtube_link
             cached_movie_list.append(info)
 
     with open(cache_filename, "w") as cache:
