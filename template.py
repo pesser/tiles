@@ -35,11 +35,15 @@ class DocumentTemplate(object):
     def __init__(self, template_filename):
         self.template_filename = template_filename
         self.stylefiles = []
+        self.js_sources = []
         self.body_contents = []
         self.finalized = False
 
     def add_stylefile(self, stylefile):
         self.stylefiles.append(stylefile)
+
+    def add_js(self, js_source):
+        self.js_sources.append(js_source)
 
     def add_body(self, body):
         self.body_contents.append(body)
@@ -54,7 +58,9 @@ class DocumentTemplate(object):
         for stylefile in self.stylefiles:
             header += (
                     '''<link rel="stylesheet" type="text/css" ''' +
-                    '''href="{cssfile}">''').format(cssfile = stylefile)
+                    '''href="{cssfile}">\n''').format(cssfile = stylefile)
+        for source in self.js_sources:
+            header += '''<script src="{}"></script>\n'''.format(source)
         return header
 
     def make_body(self):

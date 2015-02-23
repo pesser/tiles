@@ -1,8 +1,9 @@
 from schema import Movie
 from fresh_tomatoes import open_movies_page
 from template import (DocumentTemplate, TilingTemplate, make_description,
-        link)
+        link, write_template)
 from get_movie_data import get_movies_data
+import json
 
 movie_list = [
         Movie(
@@ -46,6 +47,7 @@ movie_names = {"True Romance", "The Matrix", "Spirited Away",
 
 movie_list = []
 movie_data_list = get_movies_data(movie_names, cache_filename)
+movie_data_json = json.dumps(movie_data_list)
 for movie_data in movie_data_list:
     movie = Movie(
             title = movie_data.pop("Title"),
@@ -57,6 +59,12 @@ for movie_data in movie_data_list:
 base = DocumentTemplate("base.template.html")
 base.add_stylefile("description.css")
 base.add_stylefile("modal.css")
+base.add_js("http://code.jquery.com/jquery-1.10.1.min.js")
+base.add_js(
+        write_template(
+            "get_data.template.js",
+            json_data = movie_data_json))
+base.add_js("show_details.js")
 tiling = TilingTemplate(base, "tiling.template.css", "tile.template.html")
 for movie in movie_list:
     tiling.add_tile(
