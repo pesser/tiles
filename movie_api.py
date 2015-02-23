@@ -20,7 +20,7 @@ class OMDBClient(object):
             params.append("{}={}".format(k, v))
         url = "/?" + "&".join(params)
         connection = httplib.HTTPConnection(self.api_entry)
-        connection.set_debuglevel(2)
+        connection.set_debuglevel(0)
         print(self.api_entry + url)
         connection.request(
                 method = "GET",
@@ -33,7 +33,4 @@ class OMDBClient(object):
             print("Could not decode response.")
             print(str_response)
             return str_response
-
-
-client = OMDBClient()
 

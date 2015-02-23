@@ -1,0 +1,63 @@
+.fadeout {
+  position: fixed;
+  z-index: 9000;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000000;
+  opacity: 0.4;
+}
+
+.modal {
+  position: fixed;
+  z-index: 9001;
+  width: 50%;
+  height: 69%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+  background: #AAAAAA;
+  border: 2px solid;
+  border-radius: 1.5em;
+  opacity: 0.9;
+}
+
+.modal #close {
+  font-size: 1.4em;
+  cursor: pointer;
+  color: #FFFFFF;
+  text-align: center;
+  display: inline-block;
+  line-height: 0.85em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  margin: 0;
+  position: absolute;
+  width: 1.0em;
+  height: 1.0em;
+  right: -0.3em;
+  top: -0.3em;
+  background: #000000;
+  border: 2px solid #FFFFFF;
+  border-radius: 1em;
+}
+
+.modal #close::after {
+  content: "x";
+}
+
+.modal .content {
+  color: #FFFFFF;
+  margin: 5%;
+  width: 90%;
+  height: 90%;
+  overflow: auto;
+}

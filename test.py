@@ -2,7 +2,7 @@ from schema import Movie
 from fresh_tomatoes import open_movies_page
 from template import (DocumentTemplate, TilingTemplate, make_description,
         link)
-from movie_api import OMDBClient
+from get_movie_data import get_movies_data
 
 movie_list = [
         Movie(
@@ -31,29 +31,32 @@ movie_list = [
             "https://www.youtube.com/watch?v=ByXuk9QqQkk")
         ]
 
-#open_movies_page(movie_list)
-movie_list = 5 * movie_list
+cache_filename = "movie_cache.json"
+
+movie_names = {"True Romance", "The Matrix", "Spirited Away",
+"The Grand Budapest Hotel", "Fantastic Mr. Fox",
+"Charlie and the Chocolate Factory", "My Neighbor Totoro",
+"Little Miss Sunshine", "Her", "Brazil", "Synecdoche, New York",
+"Ghost in the Shell", "Moon", "American Beauty", "Network",
+"King of California", "One Flew over the Cuckoo's Nest", "Blade Runner",
+"2001: A Space Odyssey", "Tron: Legacy", "A Serious Man", "Existenz",
+"Fight Club", "Eraserhead", "Naked Lunch", "My Life as a Dog",
+"Soul Kitchen", "The Big Lebowski", "Being John Malkovich",
+"Pulp Fiction"}
 
 movie_list = []
-client = OMDBClient()
-movie_names = ["True Romance", "The Matrix"]
-for name in movie_names:
-    info = client.query(name, False)
-    if "Error" in info:
-        print("Could not retrieve information for '{}'.".format(name) +
-                " Skipping.")
-    else:
-        movie = Movie(
-                title = info.pop("Title"),
-                poster_image_url = info.pop("Poster"),
-                trailer_youtube_url = "unknown",
-                optional_data = info)
-        movie_list.append(movie)
-
-
+movie_data_list = get_movies_data(movie_names, cache_filename)
+for movie_data in movie_data_list:
+    movie = Movie(
+            title = movie_data.pop("Title"),
+            poster_image_url = movie_data.pop("Poster"),
+            trailer_youtube_url = "unknown",
+            optional_data = movie_data)
+    movie_list.append(movie)
 
 base = DocumentTemplate("base.template.html")
 base.add_stylefile("description.css")
+base.add_stylefile("modal.css")
 tiling = TilingTemplate(base, "tiling.template.css", "tile.template.html")
 for movie in movie_list:
     tiling.add_tile(
