@@ -1,6 +1,8 @@
 import math
 import re
 
+# formatter to be able to use ${} replacement in order to avoid
+# conflict between javascript templates and pythons {} replacement
 class Formatter(object):
     delimiter = re.compile(r"""\$\{(\w+)\}""")
     def __init__(self, **kwargs):
@@ -23,6 +25,9 @@ def format_template(template, **kwargs):
     formatter = Formatter(**kwargs)
     return formatter.format(template)
 
+# read a template, substitute all ${} placeholders with the corresponding
+# value of the kwarg provided, write the result to a file where ".template"
+# is removed from the original filename
 def write_template(filename, **kwargs):
     assert(".template" in filename)
     final_filename = filename.replace(".template", "")
@@ -31,6 +36,9 @@ def write_template(filename, **kwargs):
         outfile.write(format_template(template, **kwargs))
     return final_filename
     
+# base template for html document. The template file must contain the
+# ${body} and ${head} indicators.
+# Can add css files, javascript and arbitrary body contents.
 class DocumentTemplate(object):
     def __init__(self, template_filename):
         self.template_filename = template_filename
@@ -53,6 +61,7 @@ class DocumentTemplate(object):
                 head = self.make_head(),
                 body = self.make_body())
 
+    # internal
     def make_head(self):
         header = ""
         for stylefile in self.stylefiles:
@@ -67,7 +76,7 @@ class DocumentTemplate(object):
         return "\n".join(self.body_contents)
 
         
-
+# add a tiling design to a given base template.
 class TilingTemplate(object):
     def __init__(self,
             document_base,
@@ -89,9 +98,11 @@ class TilingTemplate(object):
     def set_container_width(self, width):
         self.container_width = width
 
+    # nr of tiles per row
     def set_nr_tiles(self, nr_tiles):
         self.nr_tiles = nr_tiles
 
+    # aspect ratio of tiles
     def set_ar(self, ar):
         self.ar = ar
 
@@ -104,16 +115,16 @@ class TilingTemplate(object):
                 tile_hover_content = content)
         self.tile_htmls.append(tile_html)
 
-    def finalize(self):
-        self.finalize_style()
-        self.finalize_tiles()
-        self.finalized = True
-
     def write(self):
         if not self.finalized:
             self.finalize()
         self.document_base.write()
 
+    # internal
+    def finalize(self):
+        self.finalize_style()
+        self.finalize_tiles()
+        self.finalized = True
 
     def finalize_sizes(self):
         self.tile_width = math.floor(self.container_width / self.nr_tiles)
@@ -145,14 +156,9 @@ def make_description(title, **kwargs):
     if len(kwargs.items()) > 0:
         html += '''<dl>\n'''
         for k, v in kwargs.items():
-            if not k in ["Year", "Genre", "Director"]:
-                continue
             if isinstance(v, list):
                 v = ", ".join(v)
             html += '''<dt>{}</dt><dd>{}</dd>\n'''.format(k, v)
         html += '''</dl>\n'''
     html += "</div>"
     return html
-
-def link(url, txt):
-    return '''<a href="{}">{}</a>'''.format(url, txt)

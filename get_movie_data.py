@@ -13,15 +13,14 @@ def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
         cached_movie_list = []
 
     # normalize to lowercase for comparison
-    normalized_movie_names = set(movie_name.lower()
+    normalized_movie_names = list(movie_name.lower()
             for movie_name in movie_names)
-    cached_movie_names = set(movie["Title"].lower()
+    cached_movie_names = list(movie["Title"].lower()
             for movie in cached_movie_list)
 
     # remove movies no longer wanted
-    unwanted = cached_movie_names - normalized_movie_names
     cached_movie_list = [movie for movie in cached_movie_list
-            if movie["Title"].lower() not in unwanted]
+            if movie["Title"].lower() in normalized_movie_names]
 
     # remove any duplicates that slipped in
     known = set()
@@ -36,13 +35,12 @@ def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
     del cached_movie_list[unique_movies:]
         
     # movies not yet cached
-    movies_to_get = normalized_movie_names - cached_movie_names
+    movies_to_get = list(movie_name for movie_name in movie_names if
+            movie_name.lower() not in cached_movie_names)
     client = OMDBClient()
     youtube_client = YouTubeClient()
-    print("Obtaining informations...")
-    for movie in movies_to_get:
-        title = [movie_name for movie_name in movie_names if
-                movie_name.lower() == movie][0]
+    print("Obtaining data...")
+    for title in movies_to_get:
         print(title)
         info = client.query(title, False)
         if "Error" in info:
