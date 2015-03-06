@@ -31,7 +31,7 @@ for movie_data in movie_data_list:
     movie_list.append(movie)
 
 # base html document
-base = DocumentTemplate("base.template.html")
+base = DocumentTemplate("index.template.html")
 base.add_stylefile("description.css")
 base.add_stylefile("modal.css")
 base.add_js("http://code.jquery.com/jquery-1.10.1.min.js")

@@ -10,7 +10,7 @@ these.
 
 ## Useage
 Running `generate.py` with your favourite _Python 3_ implementation
-generates `base.html`. Opening it with a browser displays posters of
+generates `index.html`. Opening it with a browser displays posters of
 different movies. Hovering over a poster shows title and basic information
 about a movie. Upon clicking, a modal is opened containing a embedded video
 of the movie's trailer as well as detailed data.
