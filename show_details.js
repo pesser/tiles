@@ -21,15 +21,20 @@ $(document).ready(
     "click",
     function(e) {
       $(".modal, .fadeout").toggle();
+
       var movie_repr = $(e.currentTarget);
+
       var content = $(".modal .content");
+
+      // copy title and key value pairs to modal
       content.find(".title").text(movie_repr.find(".title").text());
+
       var info = content.find("#info");
       info.empty();
       var info_list = $("<dl>");
       info.append(info_list);
 
-      keys = ["Genre", "Year", "Nokey", "Country", "Director", "Writer",
+      var keys = ["Genre", "Year", "Nokey", "Country", "Director", "Writer",
         "Plot", "Actors", "Metascore", "imdbRating"];
       for(var i in keys) {
         var k = keys[i];

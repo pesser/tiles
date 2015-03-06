@@ -37,7 +37,7 @@ base.add_stylefile("modal.css")
 base.add_js("http://code.jquery.com/jquery-1.10.1.min.js")
 base.add_js("show_details.js")
 
-# make tiles of movie posters containg the movies html representation
+# add tiles of movie posters containg the movies html representation
 tiling = TilingTemplate(base, "tiling.template.css", "tile.template.html")
 for movie in movie_list:
     tiling.add_tile(

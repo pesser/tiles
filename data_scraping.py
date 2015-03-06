@@ -12,7 +12,6 @@ class OMDBClient(object):
 
     def query(self, title, rt = True):
         body = {"t": title, "tomatoes": rt}
-        json_body = json.dumps(body)
         params = []
         for k, v in body.items():
             if isinstance(v, str):
@@ -20,7 +19,6 @@ class OMDBClient(object):
             params.append("{}={}".format(k, v))
         url = "/?" + "&".join(params)
         connection = httplib.HTTPConnection(self.api_entry)
-        connection.set_debuglevel(0)
         print(self.api_entry + url)
         connection.request(
                 method = "GET",
@@ -69,7 +67,6 @@ class YouTubeClient(object):
         url = "/results?" + "&".join(params)
         # must use https as youtube redirects everything to 443
         connection = httplib.HTTPSConnection(self.api_entry)
-        connection.set_debuglevel(0)
         print(self.api_entry + url)
         connection.request(
                 method = "GET",
@@ -159,6 +156,7 @@ def get_movies_data(
             get_image(fname, movie["Poster"])
             movie["local_poster_file"] = fname
 
+    # write cache
     with open(cache_filename, "w") as cache:
         json.dump(cached_movie_list, cache)
 
