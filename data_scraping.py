@@ -161,4 +161,4 @@ def get_movies_data(
         json.dump(cached_movie_list, cache)
 
     return list(movie for movie in cached_movie_list if
-            movie["Title"].lower() in normalized_movie_names]
+            movie["Title"].lower() in normalized_movie_names)
