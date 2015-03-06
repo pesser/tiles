@@ -20,6 +20,7 @@ Tested with CPython 3.4.2, Chromium 40 as well as Firefox 35.
 
 ## Showcase
 ![Screenshot](screenshot.png)
+[Demo](http://pesser.github.io/tiles/)
 
 
 ## Customization
