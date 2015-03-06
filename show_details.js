@@ -5,7 +5,7 @@ $(document).ready(
   // only show a subset of the data
   var keysToShow = ["Year", "Director", "Genre"];
   $(".description dt").filter(function(index) {
-    return keysToShow.indexOf(this.innerText) == -1;
+    return keysToShow.indexOf(this.textContent) == -1;
   }).hide().next("dd").hide();
 
   // modal closing

@@ -1,9 +1,6 @@
 import json
 from html.parser import HTMLParser
-try:
-    import httplib
-except ImportError:
-    import http.client as httplib
+import http.client as httplib
 
 class OMDBClient(object):
     def __init__(self):
@@ -35,10 +32,12 @@ class OMDBClient(object):
             print(str_response)
             return str_response
 
+
+# parse youtube search result page for video links
 class VideoFinder(HTMLParser):
     def __init__(self):
         self.results = []
-        super(VideoFinder, self).__init__()
+        HTMLParser.__init__(self)
 
     def handle_starttag(self, tag, attrs):
         if tag == "a":

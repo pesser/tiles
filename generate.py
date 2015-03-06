@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
+
 from schema import Movie
 from template import DocumentTemplate, TilingTemplate
 from data_scraping import get_movies_data
-import json
 
+# list of movie names that we will collect data for
 movie_names = ["True Romance", "The Matrix", "Spirited Away",
 "The Grand Budapest Hotel", "Fantastic Mr. Fox",
 "Charlie and the Chocolate Factory", "My Neighbor Totoro",
@@ -14,11 +16,12 @@ movie_names = ["True Romance", "The Matrix", "Spirited Away",
 "Soul Kitchen", "The Big Lebowski", "Being John Malkovich",
 "Pulp Fiction"]
 
-# use this file as a manually managed cache to avoid too much data scraping
+# use this file as a manually managed cache to avoid excessive traffic
 cache_filename = "movie_cache.json"
-
-movie_list = []
 movie_data_list = get_movies_data(movie_names, cache_filename)
+
+# create Movie instances with the obtained data
+movie_list = []
 for movie_data in movie_data_list:
     movie = Movie(
             title = movie_data.pop("Title"),
@@ -27,13 +30,14 @@ for movie_data in movie_data_list:
             optional_data = movie_data)
     movie_list.append(movie)
 
+# base html document
 base = DocumentTemplate("base.template.html")
 base.add_stylefile("description.css")
 base.add_stylefile("modal.css")
 base.add_js("http://code.jquery.com/jquery-1.10.1.min.js")
 base.add_js("show_details.js")
 
-# make tiles of movie posters
+# make tiles of movie posters containg the movies html representation
 tiling = TilingTemplate(base, "tiling.template.css", "tile.template.html")
 for movie in movie_list:
     tiling.add_tile(
