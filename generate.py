@@ -25,7 +25,7 @@ movie_list = []
 for movie_data in movie_data_list:
     movie = Movie(
             title = movie_data.pop("Title"),
-            poster_image_url = movie_data.pop("Poster"),
+            poster_image_url = movie_data.pop("local_poster_file"),
             youtube_trailer = movie_data.pop("YoutubeTrailer"),
             optional_data = movie_data)
     movie_list.append(movie)
