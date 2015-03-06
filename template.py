@@ -109,9 +109,10 @@ class TilingTemplate(object):
     def set_border_width(self, bw):
         self.border_width = 2
 
-    def add_tile(self, img_src, content):
+    def add_tile(self, img_src, alt_txt, content):
         tile_html = format_template(self.tile_template, 
                 tile_img_src = img_src,
+                alt_txt = alt_txt,
                 tile_hover_content = content)
         self.tile_htmls.append(tile_html)
 
@@ -148,17 +149,3 @@ class TilingTemplate(object):
         tile_html = "\n".join(
                 container_begin + self.tile_htmls + container_end)
         self.document_base.add_body(tile_html)
-
-        
-def make_description(title, **kwargs):
-    html = '''<div class="description">\n'''.format(title)
-    html += '''<h1 id="title">{}</h1>\n'''.format(title)
-    if len(kwargs.items()) > 0:
-        html += '''<dl>\n'''
-        for k, v in kwargs.items():
-            if isinstance(v, list):
-                v = ", ".join(v)
-            html += '''<dt>{}</dt><dd>{}</dd>\n'''.format(k, v)
-        html += '''</dl>\n'''
-    html += "</div>"
-    return html

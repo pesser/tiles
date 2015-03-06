@@ -23,7 +23,7 @@ $(document).ready(
       $(".modal, .fadeout").toggle();
       var movie_repr = $(e.currentTarget);
       var content = $(".modal .content");
-      content.find("#title").text(movie_repr.find("#title").text());
+      content.find(".title").text(movie_repr.find(".title").text());
       var info = content.find("#info");
       info.empty();
       var info_list = $("<dl>");
@@ -42,18 +42,26 @@ $(document).ready(
         info_list.append($("<dd>", {"text": val}));
       }
 
-      var youtube = (movie_repr.find("dt:contains('youtube_trailer')").
-        next("dd").text());
-      console.log(youtube);
-      var id_matcher = /watch\?v=(.+)/;
-      var youtubeId = youtube.match(id_matcher)[1];
-      console.log(youtubeId);
-      var youtubeUrl = ("http://www.youtube.com/embed/" + youtubeId +
-                        "?autoplay=1&html5=1");
-      content.find("#trailer").empty().append(
-        $("<iframe>",
-          {"id": "youtubeframe", "type": "text-html",
-            "src": youtubeUrl}));
+      // show trailer if available
+      var trailer_container = content.find("#trailer");
+      trailer_container.empty().parent().hide();
+
+      var youtube_key = movie_repr.find("dt:contains('youtube_trailer')");
+      if(youtube_key.length == 1) {
+        var youtube = youtube_key.next("dd").text();
+        var id_matcher = /watch\?v=(.+)/;
+        var youtubeIdMatch = youtube.match(id_matcher);
+        if(youtubeIdMatch && youtubeIdMatch.length == 2) {
+          var youtubeId = youtubeIdMatch[1];
+          var youtubeUrl = ("http://www.youtube.com/embed/" + youtubeId +
+                            "?autoplay=1&html5=1");
+          trailer_container.append(
+            $("<iframe>",
+              {"id": "youtubeframe", "type": "text-html",
+                "src": youtubeUrl}));
+          trailer_container.parent().show();
+        }
+      }
     }
   );
 });

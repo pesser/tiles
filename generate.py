@@ -1,7 +1,6 @@
 from schema import Movie
-from template import (DocumentTemplate, TilingTemplate,
-        make_description, write_template)
-from get_movie_data import get_movies_data
+from template import DocumentTemplate, TilingTemplate
+from data_scraping import get_movies_data
 import json
 
 movie_names = ["True Romance", "The Matrix", "Spirited Away",
@@ -20,8 +19,6 @@ cache_filename = "movie_cache.json"
 
 movie_list = []
 movie_data_list = get_movies_data(movie_names, cache_filename)
-# json dump of the movies' data to pass data to javascript
-movie_data_json = json.dumps(movie_data_list)
 for movie_data in movie_data_list:
     movie = Movie(
             title = movie_data.pop("Title"),
@@ -34,11 +31,6 @@ base = DocumentTemplate("base.template.html")
 base.add_stylefile("description.css")
 base.add_stylefile("modal.css")
 base.add_js("http://code.jquery.com/jquery-1.10.1.min.js")
-# inject movie data into script
-base.add_js(
-        write_template(
-            "get_data.template.js",
-            json_data = movie_data_json))
 base.add_js("show_details.js")
 
 # make tiles of movie posters
@@ -46,10 +38,7 @@ tiling = TilingTemplate(base, "tiling.template.css", "tile.template.html")
 for movie in movie_list:
     tiling.add_tile(
             movie.poster_image_url,
-            make_description(
-                movie.title,
-                youtube_trailer = movie.youtube_trailer,
-                **movie.optional_data
-                )
+            "Film poster for {}".format(movie.title),
+            movie.text_html()
             )
 tiling.write()
