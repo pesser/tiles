@@ -1,6 +1,8 @@
 import json
 from html.parser import HTMLParser
 import http.client as httplib
+import urllib.request
+import os
 
 class OMDBClient(object):
     def __init__(self):
@@ -80,7 +82,19 @@ class YouTubeClient(object):
 
         return list(self.parser.results)
 
-def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
+
+def get_image(fname, url):
+    with urllib.request.urlopen(url) as response:
+        with open(fname, "wb") as f:
+            f.write(response.read())
+
+# get data for a list of movie names. If data for the movie is found in the
+# specified cache it will be used. If clean is True, the data for movies
+# which are not in the list are removed from the cache file.
+def get_movies_data(
+        movie_names,
+        cache_filename = "movie_cache.json",
+        clean = False):
     try:
         with open(cache_filename, "r") as cache:
             cached_movie_list = json.load(cache)
@@ -90,15 +104,19 @@ def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
         open(cache_filename, "w").close()
         cached_movie_list = []
 
+    if(not os.path.isdir("posters")):
+        os.mkdir("posters")
+
     # normalize to lowercase for comparison
     normalized_movie_names = list(movie_name.lower()
             for movie_name in movie_names)
     cached_movie_names = list(movie["Title"].lower()
             for movie in cached_movie_list)
 
-    # remove movies no longer wanted
-    cached_movie_list = [movie for movie in cached_movie_list
-            if movie["Title"].lower() in normalized_movie_names]
+    if clean:
+        # remove movies no longer wanted
+        cached_movie_list = [movie for movie in cached_movie_list
+                if movie["Title"].lower() in normalized_movie_names]
 
     # remove any duplicates that slipped in
     known = set()
@@ -129,6 +147,17 @@ def get_movies_data(movie_names, cache_filename = "movie_cache.json"):
                     youtube_client.query(info["Title"])[0])
             info["YoutubeTrailer"] = youtube_link
             cached_movie_list.append(info)
+
+    # retrieve poster files (imdb does not allow hotlinking)
+    for movie in cached_movie_list:
+        if (not ("local_poster_file" in movie and
+            os.path.isfile(movie["local_poster_file"]))):
+            print("Retrieving poster for {}.".format(movie["Title"]))
+            fname = "posters/poster_{title}.{ending}".format(
+                    title = movie["Title"],
+                    ending = movie["Poster"].split(".")[-1])
+            get_image(fname, movie["Poster"])
+            movie["local_poster_file"] = fname
 
     with open(cache_filename, "w") as cache:
         json.dump(cached_movie_list, cache)
